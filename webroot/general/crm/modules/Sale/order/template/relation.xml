@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="gbk"?>
+<document entity="crm_contract" key="id">
+<page id="relation" title="相关信息">
+<block id="relation_block1" title="相关信息">
+<row id="relation_block1_row1">
+<cell id="crm_salepay" name="crm_salepay" label="收费记录" colspan="2" type="grid" tips="收费记录"></cell>
+</row>
+</block>	
+</page>
+</document>
