@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="gbk"?>
+<document entity="crm_account_contact" key="id">
+<page id="relation" title="相关信息">
+<block id="relation_block1" title="联络">
+<row id="relation_block1_row1">
+<cell id="email_inbox" name="email_inbox" label="企业已回复邮件" colspan="1" type="email" tips="企业已回复邮件" ></cell>
+<cell id="email_sendbox" name="email_sendbox" label="企业已收取邮件" colspan="1" type="email" tips="企业已收取邮件" ></cell>
+</row>
+<!--
+<row id="relation_block1_row2">
+<cell id="crm_action" name="crm_action" label="客户活动" colspan="2" type="grid" tips="客户活动"></cell>
+</row>
+-->
+<row id="relation_block1_row3">
+<cell id="crm_account_care" name="crm_account_care" label="关怀活动" colspan="2" type="grid" tips="关怀活动"></cell>
+</row>
+</block>	
+</page>
+</document>
