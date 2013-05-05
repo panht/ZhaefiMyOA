@@ -6,12 +6,23 @@ truncate table TD_OA.`crm_account`;
 insert into TD_OA.`crm_account` 
 (account_field1, account_name, account_status, account_addr, account_post, account_phone, account_field2, account_fax,
  account_industry, industry_desc, account_field3, account_field4, account_field5, company_nature, account_field6, account_birthday, account_field8, account_field9, remark,
- update_man, update_time, account_url, account_email, account_field10, account_field12, account_field13, account_field14, account_type, account_field15, deleted, field3, field4)
+ update_man, update_time, account_url, account_email, account_field10, account_field12, account_field14, account_type, account_field15, deleted, field3, field4)
 select 
 HY_REG, HY_NAM, HY_STA, HY_ADD, HY_POT, HY_TEL, HY_TE2, HY_FAX, 
 HY_TRA, HY_PRO, HY_CUR, HY_AMO, HY_CAP, HY_TYP, HY_NAT, HY_JOI, HY_CER, HY_COD, HY_MEM, 
-HY_CXM, HY_CRQ, hy_url, HY_email, 理事企业, 荣誉史, concat(其他相关资料, '\n', 与协会联系记录), FaxType, MemberType, CorperationCode, 0, HY_PRE, HY_MAN
+HY_CXM, HY_CRQ, hy_url, HY_email, 理事企业, 荣誉史 FaxType, MemberType, CorperationCode, 0, HY_PRE, HY_MAN
 from wsxh2012.xhhy where hy_sta in (10, 20, 60);
+--account_field13, , concat(其他相关资料, '\n', 与协会联系记录),
+
+-- 其他相关资料和与协会联系记录导入crm_customer_service表
+truncate table TD_OA.crm_customer_service;
+insert into TD_OA.crm_customer_service
+(account_id_text, service_content, remark, `deleted`)
+select HY_NAM, 其他相关资料, 与协会联系记录, 0
+from wsxh2012.xhhy where hy_sta in (10, 20, 60)
+and ((其他相关资料 is not null and 其他相关资料 <> '') or (与协会联系记录 is not null and 与协会联系记录 <> ''));
+update TD_OA.crm_customer_service set account_id =
+(select id from TD_OA.`crm_account` where account_name = TD_OA.crm_customer_service.account_id_text limit 1);
 
 -- 导入联系人表
 truncate table TD_OA.`crm_account_contact`;
@@ -68,28 +79,7 @@ from wsxh2012.xhhy where hy_sta in (10, 20, 60) and ((hy_con4 is not null and hy
 -- 导入联系记录
 delete from wsxh2012.ContactRecord where memberid not in (select id from wsxh2012.xhhy where hy_sta in (10, 20, 60));
 
--- 导入客户活动
---insert into TD_OA.crm_action
---(`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `action_title`, `account_id`, `account_id_text`, `action_date`, `action_content`,  `action_principal`, `action_principal_text`)
---select unix_timestamp(contactdate), unix_timestamp(contactdate), adduser, adduser, adduser, adduser, adduser, 1, 
---1, 0, contactman,
---(select id from TD_OA.crm_account where account_name = (select HY_NAM from XHHY where id = wsxh2012.ContactRecord.memberid) limit 1), (select HY_NAM from XHHY where id = wsxh2012.ContactRecord.memberid),
---unix_timestamp(contactdate), content, adduser, adduser
---from wsxh2012.ContactRecord;
-
--- 导入客服记录
---truncate table TD_OA.`crm_customer_service`;
---INSERT INTO TD_OA.`crm_customer_service` ( `create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, 
---`service_title`, `account_id`, `account_id_text`, 
---`service_day`, `contact_man_text`, `service_content`, `hd_charge_man`, `hd_charge_man_text`) 
---select unix_timestamp(contactdate), unix_timestamp(contactdate), adduser, adduser, adduser, adduser, adduser, 1, 
---1, 0, 
---contactman,
---(select id from TD_OA.crm_account where account_name = (select HY_NAM from wsxh2012.XHHY where id = wsxh2012.ContactRecord.memberid) limit 1), (select HY_NAM from wsxh2012.XHHY where id = wsxh2012.ContactRecord.memberid),
---unix_timestamp(contactdate), contactman, content, adduser, adduser
---from wsxh2012.ContactRecord;
-
--- 导入客户关怀
+-- 联系记录导入客户关怀
 truncate table TD_OA.`crm_account_care`;
 INSERT INTO TD_OA.`crm_account_care` ( `create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, 
 `execution_man`, `account_id`, `account_id_text`, 
