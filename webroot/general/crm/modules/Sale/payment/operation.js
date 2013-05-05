@@ -5,7 +5,7 @@ function displayPaymentAmout(offset) {
 	var i = 0, j;
 	jQuery("#datalist tr:nth-child(1) td").each(function() {
 		i++;
-		if (jQuery(this).text().trim() == "收款金额") {
+		if (jQuery(this).text().trim() == "会费金额") {
 			j = i;
 		}
 	});
