@@ -6,7 +6,7 @@ if ($_REQUEST["action"] == "websiteSync") {
 	$username = $_REQUEST["username"];
 	$password = $_REQUEST["password"];
 	
-	$url = "http://localhost:85/updata/export/export2oa.asp?u=" . $username . "&p=" . $password;
+	$url = "http://www.zhaefi.org/2011/updata/export/export2oa.asp?u=" . $username . "&p=" . $password;
 	$data = file_get_contents($url);
 	eval($data);
 	//echo '<pre>'; 	print_r($data);	exit();
@@ -53,7 +53,7 @@ if ($_REQUEST["action"] == "websiteSync") {
 			}
 			
 			// 插入订单表
-			$sql = "insert into crm_order(create_time, update_time, create_man_text, update_man_text, deleted, order_name, order_status, order_amount, order_kind, order_sign_date, account_id, account_id_text, opportunity_id) values";
+			$sql = "insert into crm_order(create_time, update_time, create_man_text, update_man_text, deleted, order_name, order_status, order_amount, order_kind, order_sign_date, account_id, account_id_text, order_facilitate_man_text, opportunity_id) values";
 			$sql .= "(";
 			$sql .= $recordTime . ", ";
 			$sql .= $recordTime . ", ";
@@ -61,14 +61,15 @@ if ($_REQUEST["action"] == "websiteSync") {
 			$sql .= "'" . $value['CreateBy'] . "', ";
 			$sql .= "0, '" . $order_name . "', '" . $order_status . "', ";
 			$sql .= $amount . ", ";
-			$sql .= "'" . $$order_kind . "', ";
+			$sql .= "'" . $order_kind . "', ";
 			$sql .= $recordTime . ", ";;
 			$sql .= $value['MemberID'] . ", ";
 			$sql .= "'" . $value['CompanyName'] . "', ";
-			$sql .= "'学习卡号" . $value['CardNo'] . "\n" . $value['Remark'] . "' ";
+			$sql .= "'" . $value['CreateBy'] . "', ";
+			$sql .= "'学习卡号" . $value['CardNo'] . "，\n" . $value['Remark'] . "' ";
 			$sql .= ")";
 			mysql_query($sql);
-			echo $sql . '<br/>';
+			//echo $sql . '<br/>';
 			
 			// 获得自增ID
 			$sql = "select max(id) from crm_order";
@@ -78,9 +79,9 @@ if ($_REQUEST["action"] == "websiteSync") {
 			}
 			
 			// 插入订单详情表
-			$sql = "insert into crm_order_products_list(main_id, deleted, product_id, qty, price, total, create_time, update_time, create_man_text, update_man_text) values(";
+			$sql = "insert into crm_order_products_list(main_id, deleted, product_id, qty, number, price, total, create_time, update_time, create_man_text, update_man_text) values(";
 			$sql .= $id . ", ";
-			$sql .= '0, 10, 1, ';
+			$sql .= '0, 10, 1, 1, ';
 			$sql .= $value['Amount'] . ", ";
 			$sql .= $value['Amount'] . ", ";
 			$sql .= $recordTime . ", ";
@@ -89,7 +90,7 @@ if ($_REQUEST["action"] == "websiteSync") {
 			$sql .= "'" . $value['CreateBy'] . "' ";
 			$sql .= ")";
 			mysql_query($sql);
-			echo $sql . '<br/>';
+			//echo $sql . '<br/>';
 		}
 		//mysql_query($sql);
 		//echo $sql;
