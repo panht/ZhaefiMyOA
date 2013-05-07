@@ -3,7 +3,7 @@ jQuery(document).ready(function(){
 	ClearField("account_id", "propertychange", tmp_arr);
 	DependField("contact_id_text", "click", "account_id", "crm_account_contact.account_id","account_id");
 	DependField("quotation_id_text", "click", "account_id", "crm_quotation.account_id","account_id");
-	DependField("opportunity_id_text", "click", "account_id", "crm_opportunity.account_id","account_id", true);
+	//DependField("opportunity_id_text", "click", "account_id", "crm_opportunity.account_id","account_id", true);
 	ProductField("quotation_id", "propertychange", "pList", "crm_quotation");
 	
 	// 修改部分文字
