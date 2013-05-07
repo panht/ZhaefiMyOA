@@ -4,6 +4,14 @@ ini_set("max_execution_time", 1800);
 set_time_limit(1800);
 
 if ($_REQUEST["action"] == "websiteSync") {
+	if ($_REQUEST["username"] == "" || $_REQUEST["password"] == "" ) {
+?>
+		<script>
+			alert("请输入用户名密码");
+			window.location.href="websync.php";
+		</script>
+<?php
+	}
 	$username = $_REQUEST["username"];
 	$password = $_REQUEST["password"];
 	
