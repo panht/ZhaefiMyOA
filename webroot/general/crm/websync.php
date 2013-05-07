@@ -1,4 +1,5 @@
 <?php
+
 ini_set("max_execution_time", 1800);
 set_time_limit(1800);
 
@@ -7,6 +8,7 @@ if ($_REQUEST["action"] == "websiteSync") {
 	$password = $_REQUEST["password"];
 	
 	$url = "http://www.zhaefi.org/2011/updata/export/export2oa.asp?u=" . $username . "&p=" . $password;
+	//$url = "http://localhost:85/updata/export/export2oa.asp?u=" . $username . "&p=" . $password;
 	$data = file_get_contents($url);
 	eval($data);
 	//echo '<pre>'; 	print_r($data);	exit();
@@ -23,8 +25,8 @@ if ($_REQUEST["action"] == "websiteSync") {
 	if (!empty($data['dataCard'])) {
 		foreach ($data['dataCard'] as $name => $value) {
 			if (!empty($value['Balance']) && $value['Balance'] != '' && !empty($value['CompanyName']) && $value['CompanyName'] != '') {
-				$sql = "update crm_account set account_parent=" . $value['Balance'] . " where account_name='" . $value['CompanyName'] . "'";
-				//echo $sql . "<br/>";
+				$sql = "update crm_account set account_parent=" . $value['Balance'] . ", account_field9='" . $value['CardNo'] . "' where account_name='" . $value['CompanyName'] . "'";
+				// echo $sql . "<br/>";
 				$queryResult = mysql_query($sql, $connect) or die("Invalid query: " . mysql_error());
 			}
 		}
@@ -92,8 +94,6 @@ if ($_REQUEST["action"] == "websiteSync") {
 			mysql_query($sql);
 			//echo $sql . '<br/>';
 		}
-		//mysql_query($sql);
-		//echo $sql;
 	}
 	
 	echo "成功导入";
