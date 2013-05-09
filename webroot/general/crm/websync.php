@@ -63,7 +63,7 @@ if ($_REQUEST["action"] == "websiteSync") {
 			}
 			
 			// 插入订单表
-			$sql = "insert into crm_order(create_time, update_time, create_man_text, update_man_text, deleted, order_name, order_status, order_amount, order_kind, order_sign_date, account_id, account_id_text, order_facilitate_man_text, opportunity_id) values";
+			$sql = "insert into crm_order(create_time, update_time, create_man_text, update_man_text, deleted, order_name, order_status, order_amount, order_kind, order_sign_date, account_id, account_id_text, order_facilitate_man_text, opportunity_id, opportunity_id_text, order_code) values";
 			$sql .= "(";
 			$sql .= $recordTime . ", ";
 			$sql .= $recordTime . ", ";
@@ -76,30 +76,31 @@ if ($_REQUEST["action"] == "websiteSync") {
 			$sql .= $value['MemberID'] . ", ";
 			$sql .= "'" . $value['CompanyName'] . "', ";
 			$sql .= "'" . $value['CreateBy'] . "', ";
-			$sql .= "'学习卡号" . $value['CardNo'] . "，\n" . $value['Remark'] . "' ";
+			//$sql .= "'学习卡号" . $value['CardNo'] . "，\n" . $value['Remark'] . "' ";
+			$sql .= "10, '学习卡', 'StudyCard'";
 			$sql .= ")";
 			mysql_query($sql);
 			//echo $sql . '<br/>';
 			
 			// 获得自增ID
-			$sql = "select max(id) from crm_order";
-			$resultQuery = mysql_query($sql);
-			while ($row = mysql_fetch_row($resultQuery)) {
-				$id = $row[0];
-			}
+			//$sql = "select max(id) from crm_order";
+			//$resultQuery = mysql_query($sql);
+			//while ($row = mysql_fetch_row($resultQuery)) {
+			//	$id = $row[0];
+			//}
 			
 			// 插入订单详情表
-			$sql = "insert into crm_order_products_list(main_id, deleted, product_id, qty, number, price, total, create_time, update_time, create_man_text, update_man_text) values(";
-			$sql .= $id . ", ";
-			$sql .= '0, 10, 1, 1, ';
-			$sql .= $value['Amount'] . ", ";
-			$sql .= $value['Amount'] . ", ";
-			$sql .= $recordTime . ", ";
-			$sql .= $recordTime . ", ";
-			$sql .= "'" . $value['CreateBy'] . "', ";
-			$sql .= "'" . $value['CreateBy'] . "' ";
-			$sql .= ")";
-			mysql_query($sql);
+			//$sql = "insert into crm_order_products_list(main_id, deleted, product_id, qty, number, price, total, create_time, update_time, create_man_text, update_man_text) values(";
+			//$sql .= $id . ", ";
+			//$sql .= '0, 10, 1, 1, ';
+			//$sql .= $value['Amount'] . ", ";
+			//$sql .= $value['Amount'] . ", ";
+			//$sql .= $recordTime . ", ";
+			//$sql .= $recordTime . ", ";
+			//$sql .= "'" . $value['CreateBy'] . "', ";
+			//$sql .= "'" . $value['CreateBy'] . "' ";
+			//$sql .= ")";
+			//mysql_query($sql);
 			//echo $sql . '<br/>';
 		}
 	}
