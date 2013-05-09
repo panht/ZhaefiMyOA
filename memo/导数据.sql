@@ -26,18 +26,6 @@ update TD_OA.crm_customer_service set account_id =
 
 -- 导入联系人表
 truncate table TD_OA.`crm_account_contact`;
--- 法定代表人/董事长
---insert into TD_OA.`crm_account_contact` 
---(`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, `contact_name`)
---select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 1, 0, 
---(select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '法定代表人/董事长', HY_PRE 
---from wsxh2012.xhhy where hy_sta in (10, 20, 60) and HY_PRE is not null and HY_PRE <> '';
--- 总经理
---insert into TD_OA.`crm_account_contact` 
---(`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, `contact_name`)
---select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 1, 0, 
---(select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '总经理', HY_MAN 
---from wsxh2012.xhhy where hy_sta in (10, 20, 60) and HY_MAN is not null and HY_MAN <> '';
 -- 协会代表人
 insert into TD_OA.`crm_account_contact` 
 (`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, contact_phone, `contact_mobile`, `contact_name`)
@@ -73,7 +61,18 @@ select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'adm
 1, 0, 
 (select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '销售联系人', hy_contel4, hy_concel4, hy_con4
 from wsxh2012.xhhy where hy_sta in (10, 20, 60) and ((hy_con4 is not null and hy_con4 <> '') or (hy_contel4 is not null and hy_contel4 <> '') or (hy_concel4 is not null and hy_concel4 <> ''));
-
+-- 法定代表人/董事长
+--insert into TD_OA.`crm_account_contact` 
+--(`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, `contact_name`)
+--select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 1, 0, 
+--(select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '法定代表人/董事长', HY_PRE 
+--from wsxh2012.xhhy where hy_sta in (10, 20, 60) and HY_PRE is not null and HY_PRE <> '';
+-- 总经理
+--insert into TD_OA.`crm_account_contact` 
+--(`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, `contact_name`)
+--select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 1, 0, 
+--(select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '总经理', HY_MAN 
+--from wsxh2012.xhhy where hy_sta in (10, 20, 60) and HY_MAN is not null and HY_MAN <> '';
 
 
 -- 导入联系记录
