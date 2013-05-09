@@ -10,6 +10,17 @@ function return_collection_amount(obj) {
 	parObj.jQuery("#collection_amount").val(refValue2);
 	window.close();
 }
+// 服务项目页面打开的产品选择页点击某行产品时返回项目名称及编号
+function return_order_code(obj) {
+	var parObj = window.opener;
+	refValue0 = jQuery(obj).children().eq(0).children().eq(0).val();
+	parObj.jQuery("#opportunity_id").val(refValue0);
+	refValue1 = jQuery(obj).children().eq(1).text().trim();
+	parObj.jQuery("#opportunity_id_text").val(refValue1);
+	refValue4 = jQuery(obj).children().eq(4).text().trim();
+	parObj.jQuery("#order_code").val(refValue4);
+	window.close();
+}
 	
 jQuery(document).ready(function(){
 	// 如果是从会费记录页面打开，则重新绑定行点击方法
@@ -20,6 +31,17 @@ jQuery(document).ready(function(){
 			jQuery(this).unbind("click");
 			jQuery(this).bind("click", function() {
 				return_collection_amount(this);
+			});
+		});
+	}
+	
+	// 如果从服务项目页面打开，重新绑定行点击方法
+	if (window.location.href.indexOf("to_id=opportunity_id&to_value=opportunity_id_text&view_id=10014&entity_name=crm_product") > 0){
+		var trObjs = jQuery("#datalist tr");
+		trObjs.each(function(){
+			jQuery(this).unbind("click");
+			jQuery(this).bind("click", function() {
+				return_order_code(this);
 			});
 		});
 	}
