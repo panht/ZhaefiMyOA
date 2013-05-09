@@ -9,8 +9,8 @@ insert into TD_OA.`crm_account`
  update_man, update_time, account_url, account_email, account_field10, account_field12, account_field14, account_type, account_field15, deleted, field3, field4)
 select 
 HY_REG, HY_NAM, HY_STA, HY_ADD, HY_POT, HY_TEL, HY_TE2, HY_FAX, 
-HY_TRA, HY_PRO, HY_CUR, HY_AMO, HY_CAP, HY_TYP, HY_NAT, HY_JOI, HY_CER, HY_COD, HY_MEM, 
-HY_CXM, HY_CRQ, hy_url, HY_email, 理事企业, 荣誉史 FaxType, MemberType, CorperationCode, 0, HY_PRE, HY_MAN
+HY_TRA, HY_PRO, HY_CUR, HY_AMO, HY_CAP, HY_TYP, HY_NAT,  unix_timestamp(`HY_JOI`), HY_CER, HY_COD, HY_MEM, 
+HY_CXM, HY_CRQ, hy_url, HY_email, 理事企业, 荣誉史, FaxType, MemberType, CorperationCode, 0, HY_PRE, HY_MAN
 from wsxh2012.xhhy where hy_sta in (10, 20, 60);
 --account_field13, , concat(其他相关资料, '\n', 与协会联系记录),
 
@@ -97,12 +97,12 @@ delete from wsxh2012.huifei where id not in (select id from wsxh2012.xhhy where 
 truncate table TD_OA.`crm_salepay`;
 insert into TD_OA.`crm_salepay`
 (`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`,  
-`account_id`,  `collection_date`, `collection_amount`, `hd_collection_man`, `hd_collection_man_text`, remark, `salepay_field1`, `salepay_field2`, `salepay_field2_text`, `salepay_field3`, `salepay_title`)
+`account_id`,  `collection_date`, `collection_amount`, `hd_collection_man`, `hd_collection_man_text`, remark, `salepay_title`, `salepay_field2`, `salepay_field2_text`, `contract_id`)
 select 
 unix_timestamp(h.HF_CRQ), unix_timestamp(h.HF_CRQ), h.HF_CXM, h.HF_CXM, h.HF_CXM, h.HF_CXM, h.HF_CXM, 1, 
 1, 0, 
 h.id, unix_timestamp(h.HF_DAT), h.HF_AMO, h.HF_CXM, h.HF_CXM, HF_GIV, h.HF_YEA, 
-p.id, p.product_name, h.HF_COD, '会员费'
+p.id, p.product_name, h.HF_COD
 from wsxh2012.huifei h left JOIN TD_OA.crm_product p on p.product_price=h.HF_AMO
   where h.HF_AMO > 0 and h.HF_YEA > 0 and p.product_type_id=1
  ;
