@@ -5,7 +5,9 @@ jQuery(document).ready(function(){
 	DependField("quotation_id_text", "click", "account_id", "crm_quotation.account_id","account_id");
 	//DependField("opportunity_id_text", "click", "account_id", "crm_opportunity.account_id","account_id", true);
 	ProductField("quotation_id", "propertychange", "pList", "crm_quotation");
-	
+	// 项目编号输入框只读
+	jQuery("#order_code").attr("disabled", "true");
+
 	// 修改部分文字
 	jQuery("#prod_tb .TableHeader").text("服务明细");
 	jQuery("#prod_tb tr:nth-child(2) td:nth-child(2) .TableContent").text("服务编码");
