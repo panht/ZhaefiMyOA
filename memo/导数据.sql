@@ -96,16 +96,24 @@ delete from wsxh2012.huifei where id not in (select id from wsxh2012.xhhy where 
 truncate table TD_OA.`crm_salepay`;
 insert into TD_OA.`crm_salepay`
 (`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`,  
-`account_id`,  `collection_date`, `collection_amount`, `hd_collection_man`, `hd_collection_man_text`, remark, `salepay_title`, `salepay_field2`, `salepay_field2_text`, `contract_id`)
+`account_id`,  `collection_date`, `collection_amount`, `hd_collection_man`, `hd_collection_man_text`, remark, `salepay_title`, `contract_id`)
 select 
-unix_timestamp(h.HF_CRQ), unix_timestamp(h.HF_CRQ), h.HF_CXM, h.HF_CXM, h.HF_CXM, h.HF_CXM, h.HF_CXM, 1, 
-1, 0, 
+unix_timestamp(h.HF_CRQ), unix_timestamp(h.HF_CRQ), h.HF_CXM, h.HF_CXM, h.HF_CXM, h.HF_CXM, h.HF_CXM, 1, 1, 0, 
 h.id, unix_timestamp(h.HF_DAT), h.HF_AMO, h.HF_CXM, h.HF_CXM, HF_GIV, h.HF_YEA, 
-p.id, p.product_name, h.HF_COD
-from wsxh2012.huifei h left JOIN TD_OA.crm_product p on p.product_price=h.HF_AMO
-  where h.HF_AMO > 0 and h.HF_YEA > 0 and p.product_type_id=1
- ;
- -- 更新会费表的会员ID、名称；根据id查询，没有id的根据会费卡号
+ h.HF_COD
+from wsxh2012.huifei h
+where h.HF_AMO > 0 and h.HF_YEA > 0;
+
+-- 更新产品
+update TD_OA.crm_salepay s set 
+s.salepay_field2 = (select id from TD_OA.crm_product where product_type_id=1 and product_price=s.collection_amount and id<7),
+s.salepay_field2_text = (select product_name from TD_OA.crm_product where product_type_id=1 and product_price=s.collection_amount and id<7);
+update TD_OA.crm_salepay set 
+salepay_field2 = 7,
+salepay_field2_text = '补交往年会费'
+where salepay_field2 is null;
+  
+-- 更新会费表的会员ID、名称；根据id查询，没有id的根据会费卡号
 update TD_OA.crm_salepay set `account_id_text` = (select hy_nam from wsxh2012.xhhy where id = TD_OA.crm_salepay.account_id limit 1);
 update TD_OA.crm_salepay set `account_id` = (select id from TD_OA.crm_account where account_name = crm_salepay.account_id_text limit 1);
 
