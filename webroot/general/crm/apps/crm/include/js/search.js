@@ -132,6 +132,16 @@ function getListInfo( _datas){
 		loading.show();
 		var url = window.g_ModuleListUrl ||  g_CRM_PATH + '/include/search.php';
 		var _datas = _datas || {};
+		// 企业信息页面添加是否未交今年会费条件
+		if (window.location.href.indexOf("/Account/account/") > 0) {
+			//如果选中未交今年会费
+			if (jQuery("#memeberFeeThisYear").attr("checked") == "checked") {
+				_datas['memeberFeeThisYear'] = "true";
+			} else {
+				_datas['memeberFeeThisYear'] = "false";
+			}
+		}
+		
 	 	jQuery.ajax({
 			type	: "GET",
 			async : true,
@@ -217,6 +227,7 @@ function getRencent_views( _datas){
 			}
 		});
 }
+
 
 // 显示收款金额小结
 // \webroot\general\crm\apps\crm\include\js\search.js getListInfo方法的ajax成功回调方法要调用这个方法
