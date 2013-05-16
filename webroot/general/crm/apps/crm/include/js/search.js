@@ -134,12 +134,7 @@ function getListInfo( _datas){
 		var _datas = _datas || {};
 		// 企业信息页面添加是否未交今年会费条件
 		if (window.location.href.indexOf("/Account/account/") > 0) {
-			//如果选中未交今年会费
-			if (jQuery("#memeberFeeThisYear").attr("checked") == "checked") {
-				_datas['memeberFeeThisYear'] = "true";
-			} else {
-				_datas['memeberFeeThisYear'] = "false";
-			}
+			_datas['memeberFeeThisYear'] = jQuery("input[name='memeberFeeThisYear']:checked").val();
 		}
 		
 	 	jQuery.ajax({

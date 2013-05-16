@@ -1,1 +1,1 @@
-jQuery("#con_search_nor .seacher_base .line").append("<li><input type='checkbox' id='memeberFeeThisYear' />&nbsp;未交今年会费</li>");
+jQuery("#con_search_nor .seacher_base .line").append("<li><input type='radio' id='memeberFeeThisYear' name='memeberFeeThisYear' value='none' checked />无&nbsp;<input type='radio' id='memeberFeeThisYear' name='memeberFeeThisYear' value='yes' />&nbsp;已交今年会费&nbsp;<input type='radio' id='memeberFeeThisYear' name='memeberFeeThisYear' value='no' />&nbsp;未交今年会费&nbsp;</li>");

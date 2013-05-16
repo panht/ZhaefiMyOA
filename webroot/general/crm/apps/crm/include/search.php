@@ -46,11 +46,14 @@ $query = getviewquerycountsql( $USER_VIEW, $ENTITY, $WHERE_CLAUSE, $EXTENSION_AU
 
 // 是否未交今年会费
 $memeberFeeThisYear = $_GET['memeberFeeThisYear'];
-if ( $ENTITY == "crm_account" && $memeberFeeThisYear == 'true') {
-	//$WHERE_CLAUSE .= " and crm_account.account_id not in(select account_id from crm_salepay where date('Y')=floor(salepay_title))";
-	//$query = "SELECT count(*) FROM crm_account a inner join (SELECT account_id FROM crm_salepay WHERE year(now())=floor(salepay_title)) b on  a.id = b.account_id  WHERE a.deleted =0 ";
-	$joinClause = " left join (SELECT account_id FROM crm_salepay WHERE year(now())=floor(salepay_title)) b on  crm_account.id = b.account_id ";
-	$whereClause = " and b.account_id is null";
+if ( $ENTITY == "crm_account" && ($memeberFeeThisYear == 'yes' || $memeberFeeThisYear == 'no')) {
+	if ($memeberFeeThisYear == 'no') {
+		$joinClause = " left join (SELECT account_id FROM crm_salepay WHERE year(now())=floor(salepay_title)) b on  crm_account.id = b.account_id ";
+		$whereClause = " and b.account_id is null";
+	} elseif ($memeberFeeThisYear == 'yes') {
+		$joinClause = " inner join (SELECT account_id FROM crm_salepay WHERE year(now())=floor(salepay_title)) b on  crm_account.id = b.account_id ";
+		$whereClause = "";
+	}
 	$query = str_replace(' LEFT OUTER JOIN crm_account AS crm_account__account_parent ON crm_account__account_parent.id = crm_account.account_parent', $joinClause, $query);
 	$query .= $whereClause;
 }
@@ -72,7 +75,7 @@ $views = getuserviewlist( $ENTITY, $LOGIN_USER_ID, $LOGIN_DEPT_ID, $LOGIN_USER_P
 $VIEW_OPTION_TMPL = getviewseloptiontmpl( $views, $USER_VIEW );
 $query = getviewquerysql( $USER_VIEW, $ENTITY, $PAGE_SIZE, $CUR_PAGE, $ORDERFIELD, $ORDERTYPE, $WHERE_CLAUSE, $CONFIGARR, $EXTENSION_AUTHORITY_CLAUSE );
 // 是否未交今年会费
-if ( $ENTITY == "crm_account" && $memeberFeeThisYear == 'true') {
+if ( $ENTITY == "crm_account" && ($memeberFeeThisYear == 'yes' || $memeberFeeThisYear == 'no')) {
 	$query = str_replace(' LEFT OUTER JOIN crm_account AS crm_account__account_parent ON crm_account__account_parent.id = crm_account.account_parent', $joinClause, $query);
 	$query = str_replace(' order by', $whereClause . ' order by', $query);
 }
