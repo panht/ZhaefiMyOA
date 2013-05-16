@@ -22,6 +22,11 @@ mysql_close($connect);
 <title>会员证>>打印预览</title>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
 <style>
+.print09 {
+    font-family: "黑体";
+    font-size: 20pt;
+    font-weight: bold;
+}
 .print11 {
     font-family: "黑体";
     font-size: 16px;
@@ -40,9 +45,9 @@ mysql_close($connect);
 	<tr><td class=print10 align=center>法定代表人：<?php echo $leal_person?></td></tr>
 </table>
 </div>
-<div style='position:absolute;left:80;top:960' class=print11>证   号：<?php echo $certificate_no?></div>
-<div style='position:absolute;left:240;top:960' class=print11>入会日期：<?php echo date("Y年m月d日", $account_birthday)?></div>
-<div style='position:absolute;left:445;top:960' class=print11>发证日期：<?php echo date("Y年m月d日")?></div>
+<div style='position:absolute;left:50;top:960' class=print11>证号：<?php echo $certificate_no?></div>
+<div style='position:absolute;left:220;top:960' class=print11>入会日期：<?php echo date("Y年n月j日", $account_birthday)?></div>
+<div style='position:absolute;left:445;top:960' class=print11>发证日期：<?php echo date("Y年n月j日")?></div>
 </td></tr></table>
 </div>
 </body>
