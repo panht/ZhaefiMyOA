@@ -6,20 +6,22 @@ truncate table TD_OA.`crm_account`;
 insert into TD_OA.`crm_account` 
 (account_field1, account_name, account_status, account_addr, account_post, account_phone, account_field2, account_fax,
  account_industry, industry_desc, account_field3, account_field4, account_field5, company_nature, account_field6, account_birthday, account_field8, account_field9, remark,
- update_man, update_time, account_url, account_email, account_field10, account_field12, account_field14, account_type, account_field15, deleted, field3, field4)
+ update_man, update_time, create_time, account_url, account_email, account_field10, account_field12, account_field14, account_type, account_field15, deleted, field3, field4)
 select 
-HY_REG, HY_NAM, HY_STA, HY_ADD, HY_POT, HY_TEL, HY_TE2, HY_FAX, 
+unix_timestamp(HY_REG), HY_NAM, HY_STA, HY_ADD, HY_POT, HY_TEL, HY_TE2, HY_FAX, 
 HY_TRA, HY_PRO, HY_CUR, HY_AMO, HY_CAP, HY_TYP, HY_NAT,  unix_timestamp(`HY_JOI`), HY_CER, HY_COD, HY_MEM, 
-HY_CXM, HY_CRQ, hy_url, HY_email, 理事企业, 荣誉史, FaxType, MemberType, CorperationCode, 0, HY_PRE, HY_MAN
-from wsxh2012.xhhy where hy_sta in (10, 20, 60);
---account_field13, , concat(其他相关资料, '\n', 与协会联系记录),
+HY_CXM, unix_timestamp(HY_CRQ), unix_timestamp(HY_CRQ), hy_url, HY_email, 理事企业, 荣誉史, FaxType, MemberType, CorperationCode, 0, HY_PRE, HY_MAN
+from wsxh2012.xhhy where hy_sta in (10, 60, 80);
+update TD_OA.`crm_account` set account_type='B-游离会员' where account_status = 80;
+update TD_OA.`crm_account` set account_url = replace(account_url, 'http://', '')
+WHERE `account_url` LIKE '%http://%';
 
 -- 其他相关资料和与协会联系记录导入crm_customer_service表
 truncate table TD_OA.crm_customer_service;
 insert into TD_OA.crm_customer_service
 (account_id_text, service_content, remark, `deleted`)
 select HY_NAM, 其他相关资料, 与协会联系记录, 0
-from wsxh2012.xhhy where hy_sta in (10, 20, 60)
+from wsxh2012.xhhy where hy_sta in (10, 60, 80)
 and ((其他相关资料 is not null and 其他相关资料 <> '') or (与协会联系记录 is not null and 与协会联系记录 <> ''));
 update TD_OA.crm_customer_service set account_id =
 (select id from TD_OA.`crm_account` where account_name = TD_OA.crm_customer_service.account_id_text limit 1);
@@ -32,51 +34,51 @@ insert into TD_OA.`crm_account_contact`
 select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 
 1, 0, 
 (select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '协会代表人', hy_contel, hy_concel, HY_CON 
-from wsxh2012.xhhy where hy_sta in (10, 20, 60) and ((hy_con is not null and hy_con <> '') or (hy_contel is not null and hy_contel <> '') or (hy_concel is not null and hy_concel <> ''));
+from wsxh2012.xhhy where hy_sta in (10, 60, 80) and ((hy_con is not null and hy_con <> '') or (hy_contel is not null and hy_contel <> '') or (hy_concel is not null and hy_concel <> ''));
 -- 行政联系人
 insert into TD_OA.`crm_account_contact` 
 (`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, contact_phone, `contact_mobile`, `contact_name`)
 select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 
 1, 0, 
 (select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '行政联系人', hy_contel1, hy_concel1, hy_con1
-from wsxh2012.xhhy where hy_sta in (10, 20, 60) and ((hy_con1 is not null and hy_con1 <> '') or (hy_contel1 is not null and hy_contel1 <> '') or (hy_concel1 is not null and hy_concel1 <> ''));
+from wsxh2012.xhhy where hy_sta in (10, 60, 80) and ((hy_con1 is not null and hy_con1 <> '') or (hy_contel1 is not null and hy_contel1 <> '') or (hy_concel1 is not null and hy_concel1 <> ''));
 -- 财务联系人
 insert into TD_OA.`crm_account_contact` 
 (`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, contact_phone, `contact_mobile`, `contact_name`)
 select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 
 1, 0, 
 (select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '财务联系人', hy_contel2, hy_concel2, hy_con2
-from wsxh2012.xhhy where hy_sta in (10, 20, 60) and ((hy_con2 is not null and hy_con2 <> '') or (hy_contel2 is not null and hy_contel2 <> '') or (hy_concel2 is not null and hy_concel2 <> ''));
+from wsxh2012.xhhy where hy_sta in (10, 60, 80) and ((hy_con2 is not null and hy_con2 <> '') or (hy_contel2 is not null and hy_contel2 <> '') or (hy_concel2 is not null and hy_concel2 <> ''));
 -- HR联系人
 insert into TD_OA.`crm_account_contact` 
 (`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, contact_phone, `contact_mobile`, `contact_name`)
 select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 
 1, 0, 
 (select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, 'HR联系人', hy_contel3, hy_concel3, hy_con3
-from wsxh2012.xhhy where hy_sta in (10, 20, 60) and ((hy_con3 is not null and hy_con3 <> '') or (hy_contel3 is not null and hy_contel3 <> '') or (hy_concel3 is not null and hy_concel3 <> ''));
+from wsxh2012.xhhy where hy_sta in (10, 60, 80) and ((hy_con3 is not null and hy_con3 <> '') or (hy_contel3 is not null and hy_contel3 <> '') or (hy_concel3 is not null and hy_concel3 <> ''));
 -- 销售联系人
 insert into TD_OA.`crm_account_contact` 
 (`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, contact_phone, `contact_mobile`, `contact_name`)
 select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 
 1, 0, 
 (select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '销售联系人', hy_contel4, hy_concel4, hy_con4
-from wsxh2012.xhhy where hy_sta in (10, 20, 60) and ((hy_con4 is not null and hy_con4 <> '') or (hy_contel4 is not null and hy_contel4 <> '') or (hy_concel4 is not null and hy_concel4 <> ''));
+from wsxh2012.xhhy where hy_sta in (10, 60, 80) and ((hy_con4 is not null and hy_con4 <> '') or (hy_contel4 is not null and hy_contel4 <> '') or (hy_concel4 is not null and hy_concel4 <> ''));
 -- 法定代表人/董事长
 --insert into TD_OA.`crm_account_contact` 
 --(`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, `contact_name`)
 --select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 1, 0, 
 --(select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '法定代表人/董事长', HY_PRE 
---from wsxh2012.xhhy where hy_sta in (10, 20, 60) and HY_PRE is not null and HY_PRE <> '';
+--from wsxh2012.xhhy where hy_sta in (10, 60, 80) and HY_PRE is not null and HY_PRE <> '';
 -- 总经理
 --insert into TD_OA.`crm_account_contact` 
 --(`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`, `account_id`, `account_id_text`, `contact_position`, `contact_name`)
 --select unix_timestamp(now()), unix_timestamp(now()), 'admin', '系统管理员', 'admin', '系统管理员', 'admin', 1, 1, 0, 
 --(select id from TD_OA.crm_account where account_name = HY_NAM limit 1), HY_NAM, '总经理', HY_MAN 
---from wsxh2012.xhhy where hy_sta in (10, 20, 60) and HY_MAN is not null and HY_MAN <> '';
+--from wsxh2012.xhhy where hy_sta in (10, 60, 80) and HY_MAN is not null and HY_MAN <> '';
 
 
 -- 导入联系记录
-delete from wsxh2012.ContactRecord where memberid not in (select id from wsxh2012.xhhy where hy_sta in (10, 20, 60));
+delete from wsxh2012.ContactRecord where memberid not in (select id from wsxh2012.xhhy where hy_sta in (10, 60, 80));
 
 -- 联系记录导入客户关怀
 truncate table TD_OA.`crm_account_care`;
@@ -92,7 +94,7 @@ from wsxh2012.ContactRecord;
 
 
 -- 导入会费表
-delete from wsxh2012.huifei where id not in (select id from wsxh2012.xhhy where hy_sta in (10, 20, 60));
+delete from wsxh2012.huifei where id not in (select id from wsxh2012.xhhy where hy_sta in (10, 60, 80));
 truncate table TD_OA.`crm_salepay`;
 insert into TD_OA.`crm_salepay`
 (`create_time`, `update_time`, `create_man`, `create_man_text`, `update_man`, `update_man_text`, `owner`, `owner_dept`, `create_dept`, `deleted`,  
