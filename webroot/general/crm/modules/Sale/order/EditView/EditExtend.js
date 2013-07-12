@@ -1,6 +1,5 @@
 jQuery(document).ready(function(){
-	//var tmp_arr = new Array("opportunity_id", "opportunity_id_text", "contact_id", "contact_id_text", "quotation_id", "quotation_id_text");
-	// account_id字段文本框值改变后，清后其它字段文本框数据
+	// account_id字段文本框值改变后，清空其它字段文本框数据
 	var tmp_arr = new Array("contact_id", "contact_id_text", "quotation_id", "quotation_id_text");
 	ClearField("account_id", "propertychange", tmp_arr);
 	
