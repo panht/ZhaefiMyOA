@@ -317,3 +317,11 @@ function sizeFix(){
 		});
 		jQuery('table.CRM_Dialog').css({'left' : (newWidth/2 -300)});
 }
+
+// 服务项目打开项目名称后，按项目类型进行筛选
+if (window.location.href.indexOf("reference.php?to_id=opportunity_id&to_value=opportunity_id_text&view_id=10014&entity_name=crm_product") > 0 && window.location.href.indexOf("searchType=") < 0) {
+	type = window.opener.document.getElementById("order_name").value;
+	if (type != undefined && type != "") {
+		window.location.href = window.location.href +	"&field0=crm_product.product_type_id:crm_product_type:id:crm_product_type.product_type_name:F:reference&op0=is&value0=" + type + "&cnt=1&searchType=2&matchtype=undefined";
+	}
+}
