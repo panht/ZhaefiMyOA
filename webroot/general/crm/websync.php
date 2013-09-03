@@ -1,7 +1,6 @@
 <?php
-
-ini_set("max_execution_time", 1800);
-set_time_limit(1800);
+ini_set("max_execution_time", 3600);
+set_time_limit(3600);
 
 if ($_REQUEST["action"] == "websiteSync") {
 	if ($_REQUEST["username"] == "" || $_REQUEST["password"] == "" ) {
@@ -19,7 +18,6 @@ if ($_REQUEST["action"] == "websiteSync") {
 	//$url = "http://localhost:85/updata/export/export2oa.asp?u=" . $username . "&p=" . $password;
 	$data = file_get_contents($url);
 	eval($data);
-	//echo '<pre>'; 	print_r($data);	exit();
 
 	// 写入mysql
 	$connect = mysql_connect("127.0.0.1:3336", "root", "myoa888");
@@ -28,21 +26,45 @@ if ($_REQUEST["action"] == "websiteSync") {
 	}
 	mysql_select_db("TD_OA", $connect);
 	mysql_query("SET NAMES 'GBK'"); 
-	
-	// 更新会员表
+
+	// 更新会员表及学习卡表
 	if (!empty($data['dataCard'])) {
 		foreach ($data['dataCard'] as $name => $value) {
 			if (!empty($value['Balance']) && $value['Balance'] != '' && !empty($value['CompanyName']) && $value['CompanyName'] != '') {
+				// 更新会员表
 				$sql = "update crm_account set account_parent=" . $value['Balance'] . ", account_field9='" . $value['CardNo'] . "' where account_name='" . $value['CompanyName'] . "'";
-				// echo $sql . "<br/>";
 				$queryResult = mysql_query($sql, $connect) or die("Invalid query: " . mysql_error());
+			}
+			
+			// 更新学习卡表
+			if (!empty($value['CardNo']) && $value['CardNo'] != '' ) {
+				$sql = "select * from CRM_MODULE_2 where field1 = '" . $value['CardNo'] . "'";
+				$queryResult = mysql_query($sql, $connect) or die("Invalid query: " . $sql . "error:" . mysql_error());
+				$row = mysql_fetch_array($queryResult);
+				
+				if (strlen($row['field1']) > 0) {
+					// 如果已存在则更新，否则插入
+					$sql = "update CRM_MODULE_2 set deleted=0, field1 = '" . $value['CardNo'] . "', field2=" . $value['MemberID'] . ", field2_text='" . $value['CompanyName'] . "', field3='" . $value['OwnerName'] . "', field4='" . $value['OwnerCellphone'] . "', field5='" . $value['OwnerEmail'] . "', field6=" . $value['Balance'] . ", field7=" . strtotime($value['CreateDate']) . ", field8='" . $value['CardType'] . "', field9='" . $value['CardStatus'] . "', field10='" . strtotime($value['CancelDate']) . "', field12='" . $value['Memo'] . "', update_man_text='" . $value['UpdateBy'] . "', update_time=" . strtotime($value['UpdateTime']) . " where  field1 = '" . $value['CardNo'] . "'";
+				} else {
+					$sql = "insert into CRM_MODULE_2(deleted, field1, field2, field2_text, field3, field4, field5, field6, field7, field8, field9, field10, field11, field12, create_man_text, create_time, update_man_text, update_time) values(0, '" . $value['CardNo'] . "', " . $value['MemberID'] . ", '" . $value['CompanyName'] . "', '" . $value['OwnerName'] . "', '" . $value['OwnerCellphone'] . "', '" . $value['OwnerEmail'] . "', " . $value['Balance'] . ", " . strtotime($value['CreateDate']) . ", '" . $value['CardType'] . "', '" . $value['CardStatus'] . "', '" . strtotime($value['CancelDate']) . "', '', '" . $value['Memo'] . "', '" . $value['CreateBy'] . "', " . strtotime($value['CreateTime']) . ", '" . $value['UpdateBy'] . "', " . strtotime($value['UpdateTime']) . ')';
+				}
+				//echo $sql;
+				$queryResult = mysql_query($sql, $connect) or die("Invalid query: " . $sql . "error:" . mysql_error());
 			}
 		}
 	}
 	
-	// 写入收费记录表
+	// 写入充值、支付记录
 	if (!empty($data['dataRecord'])) {
 		foreach ($data['dataRecord'] as $name => $value) {
+			$record = "[" . $value['RecordTime'] . "]";
+			$record .= " " . $value['RecordType'] . " ";
+			$record .= "" . $value['Amount'] . "元";
+			$record .= "(" . $value['Remark'] . ")\n";
+			$sql = "update CRM_MODULE_2 set field11 = concat(field11, '" . $record . "') where field1 = '" . $value['CardNo'] . "'" ;
+			$queryResult = mysql_query($sql, $connect) or die("Invalid query: " . $sql . "error:" . mysql_error());
+			
+			/*
 			$recordTime = strtotime($value['RecordTime']);
 			if ($recordTime == null || $recordTime == '') {
 				$recordTime = 0;
@@ -102,9 +124,9 @@ if ($_REQUEST["action"] == "websiteSync") {
 			//$sql .= ")";
 			//mysql_query($sql);
 			//echo $sql . '<br/>';
+			*/
 		}
 	}
-	
 	echo "成功导入";
 } else {
 ?>
