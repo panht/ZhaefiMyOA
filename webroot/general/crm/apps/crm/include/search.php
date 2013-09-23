@@ -48,10 +48,10 @@ $query = getviewquerycountsql( $USER_VIEW, $ENTITY, $WHERE_CLAUSE, $EXTENSION_AU
 $memeberFeeThisYear = $_GET['memeberFeeThisYear'];
 if ( $ENTITY == "crm_account" && ($memeberFeeThisYear == 'yes' || $memeberFeeThisYear == 'no')) {
 	if ($memeberFeeThisYear == 'no') {
-		$joinClause = " left join (SELECT account_id FROM crm_salepay WHERE year(now())=floor(salepay_title)) b on  crm_account.id = b.account_id ";
+		$joinClause = " left join (SELECT distinct account_id FROM crm_salepay WHERE year(now())=floor(salepay_title)) b on  crm_account.id = b.account_id ";
 		$whereClause = " and b.account_id is null";
 	} elseif ($memeberFeeThisYear == 'yes') {
-		$joinClause = " inner join (SELECT account_id FROM crm_salepay WHERE year(now())=floor(salepay_title)) b on  crm_account.id = b.account_id ";
+		$joinClause = " inner join (SELECT distinct account_id FROM crm_salepay WHERE year(now())=floor(salepay_title)) b on  crm_account.id = b.account_id ";
 		$whereClause = "";
 	}
 	$query = str_replace(' LEFT OUTER JOIN crm_account AS crm_account__account_parent ON crm_account__account_parent.id = crm_account.account_parent', $joinClause, $query);
