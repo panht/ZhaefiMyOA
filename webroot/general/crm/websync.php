@@ -20,12 +20,13 @@ if ($_REQUEST["action"] == "websiteSync") {
 	eval($data);
 
 	// 写入mysql
-	$connect = mysql_connect("127.0.0.1:3336", "root", "myoa888");
-	if (!$connect){
-		die(mysql_error());
-	}
-	mysql_select_db("TD_OA", $connect);
-	mysql_query("SET NAMES 'GBK'"); 
+	require ("conn.php");
+	// $connect = mysql_connect("127.0.0.1:3336", "root", "myoa888");
+	// if (!$connect){
+		// die(mysql_error());
+	// }
+	// mysql_select_db("TD_OA", $connect);
+	// mysql_query("SET NAMES 'GBK'"); 
 
 	// 更新会员表及学习卡表
 	if (!empty($data['dataCard'])) {

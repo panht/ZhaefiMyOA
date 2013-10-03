@@ -2,9 +2,10 @@
 header("content-type:application/javascript");
 
 if ($_GET['action']="companyName") {
-	$connect = mysql_connect("localhost:3336", "root", "myoa888");
-	mysql_select_db("TD_OA", $connect);
-	mysql_query("SET NAMES 'GBK'"); 
+	require ("conn.php");
+	//$connect = mysql_connect("localhost:3336", "root", "myoa888");
+	//mysql_select_db("TD_OA", $connect);
+	//mysql_query("SET NAMES 'GBK'"); 
 	
 	//$name = iconv('latin1_swedish_ci', 'GBK', $_GET["name"]);
 	$name = $_GET["name"];

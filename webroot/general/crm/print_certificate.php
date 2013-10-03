@@ -1,10 +1,12 @@
 <?php
-$connect = mysql_connect("127.0.0.1:3336", "root", "myoa888");
-if (!$connect){
-	die(mysql_error());
-}
-mysql_select_db("TD_OA", $connect);
-mysql_query("SET NAMES 'GBK'"); 
+require ("conn.php");
+
+// $connect = mysql_connect("127.0.0.1:3336", "root", "myoa888");
+// if (!$connect){
+	// die(mysql_error());
+// }
+// mysql_select_db("TD_OA", $connect);
+// mysql_query("SET NAMES 'GBK'"); 
 
 $sql = "select account_name, field3, account_field8, account_birthday from crm_account where id = " . $_GET['id'] . " limit 1";
 $sqlResult = mysql_query($sql);
