@@ -6,7 +6,7 @@ if ($_REQUEST["action"] == "websiteSync") {
 	if ($_REQUEST["username"] == "" || $_REQUEST["password"] == "" ) {
 ?>
 		<script>
-			alert("ÇëÊäÈëÓÃ»§ÃûÃÜÂë");
+			alert("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			window.location.href="websync.php";
 		</script>
 <?php
@@ -14,12 +14,12 @@ if ($_REQUEST["action"] == "websiteSync") {
 	$username = $_REQUEST["username"];
 	$password = $_REQUEST["password"];
 	
-	$url = "http://www.zhaefi.org/2011/updata/export/export2oa.asp?u=" . $username . "&p=" . $password;
+	$url = "http://www.zhaefi.org/updata/export/export2oa.asp?u=" . $username . "&p=" . $password;
 	//$url = "http://localhost:85/updata/export/export2oa.asp?u=" . $username . "&p=" . $password;
 	$data = file_get_contents($url);
 	eval($data);
 
-	// Ð´Èëmysql
+	// Ð´ï¿½ï¿½mysql
 	require ("conn.php");
 	// $connect = mysql_connect("127.0.0.1:3336", "root", "myoa888");
 	// if (!$connect){
@@ -28,23 +28,23 @@ if ($_REQUEST["action"] == "websiteSync") {
 	// mysql_select_db("TD_OA", $connect);
 	// mysql_query("SET NAMES 'GBK'"); 
 
-	// ¸üÐÂ»áÔ±±í¼°Ñ§Ï°¿¨±í
+	// ï¿½ï¿½ï¿½Â»ï¿½Ô±ï¿½ï¿½ï¿½ï¿½Ñ§Ï°ï¿½ï¿½ï¿½ï¿½
 	if (!empty($data['dataCard'])) {
 		foreach ($data['dataCard'] as $name => $value) {
 			if (!empty($value['Balance']) && $value['Balance'] != '' && !empty($value['CompanyName']) && $value['CompanyName'] != '') {
-				// ¸üÐÂ»áÔ±±í
+				// ï¿½ï¿½ï¿½Â»ï¿½Ô±ï¿½ï¿½
 				$sql = "update crm_account set account_parent=" . $value['Balance'] . ", account_field9='" . $value['CardNo'] . "' where account_name='" . $value['CompanyName'] . "'";
 				$queryResult = mysql_query($sql, $connect) or die("Invalid query: " . mysql_error());
 			}
 			
-			// ¸üÐÂÑ§Ï°¿¨±í
+			// ï¿½ï¿½ï¿½ï¿½Ñ§Ï°ï¿½ï¿½ï¿½ï¿½
 			if (!empty($value['CardNo']) && $value['CardNo'] != '' ) {
 				$sql = "select * from CRM_MODULE_2 where field1 = '" . $value['CardNo'] . "'";
 				$queryResult = mysql_query($sql, $connect) or die("Invalid query: " . $sql . "error:" . mysql_error());
 				$row = mysql_fetch_array($queryResult);
 				
 				if (strlen($row['field1']) > 0) {
-					// Èç¹ûÒÑ´æÔÚÔò¸üÐÂ£¬·ñÔò²åÈë
+					// ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					$sql = "update CRM_MODULE_2 set deleted=0, field1 = '" . $value['CardNo'] . "', field2=" . $value['MemberID'] . ", field2_text='" . $value['CompanyName'] . "', field3='" . $value['OwnerName'] . "', field4='" . $value['OwnerCellphone'] . "', field5='" . $value['OwnerEmail'] . "', field6=" . $value['Balance'] . ", field7=" . strtotime($value['CreateDate']) . ", field8='" . $value['CardType'] . "', field9='" . $value['CardStatus'] . "', field10='" . strtotime($value['CancelDate']) . "', field12='" . $value['Memo'] . "', update_man_text='" . $value['UpdateBy'] . "', update_time=" . strtotime($value['UpdateTime']) . " where  field1 = '" . $value['CardNo'] . "'";
 				} else {
 					$sql = "insert into CRM_MODULE_2(deleted, field1, field2, field2_text, field3, field4, field5, field6, field7, field8, field9, field10, field11, field12, create_man_text, create_time, update_man_text, update_time) values(0, '" . $value['CardNo'] . "', " . $value['MemberID'] . ", '" . $value['CompanyName'] . "', '" . $value['OwnerName'] . "', '" . $value['OwnerCellphone'] . "', '" . $value['OwnerEmail'] . "', " . $value['Balance'] . ", " . strtotime($value['CreateDate']) . ", '" . $value['CardType'] . "', '" . $value['CardStatus'] . "', '" . strtotime($value['CancelDate']) . "', '', '" . $value['Memo'] . "', '" . $value['CreateBy'] . "', " . strtotime($value['CreateTime']) . ", '" . $value['UpdateBy'] . "', " . strtotime($value['UpdateTime']) . ')';
@@ -55,7 +55,7 @@ if ($_REQUEST["action"] == "websiteSync") {
 		}
 	}
 	
-	// Ð´Èë³äÖµ¡¢Ö§¸¶¼ÇÂ¼
+	// Ð´ï¿½ï¿½ï¿½Öµï¿½ï¿½Ö§ï¿½ï¿½ï¿½ï¿½Â¼
 	if (!empty($data['dataRecord'])) {
 		foreach ($data['dataRecord'] as $name => $value) {
 			$record = "[" . $value['RecordTime'] . "]";
@@ -71,21 +71,21 @@ if ($_REQUEST["action"] == "websiteSync") {
 				$recordTime = 0;
 			}
 			
-			$order_name = 'Ñ§Ï°¿¨µ¼Èë';
+			$order_name = 'Ñ§Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
 			if ($value['CardType'] == 1) {
-				$order_kind = '»áÔ±';
+				$order_kind = 'ï¿½ï¿½Ô±';
 			} else {
-				$order_kind = '·Ç»áÔ±';
+				$order_kind = 'ï¿½Ç»ï¿½Ô±';
 			}
 			if ($value['RecordType'] == 1) {
-				$order_status = 'Ñ§Ï°¿¨³äÖµ';
+				$order_status = 'Ñ§Ï°ï¿½ï¿½ï¿½ï¿½Öµ';
 				$amount = $value['Amount'];
 			} else {
-				$order_status = 'Ñ§Ï°¿¨¿Û¿î';
+				$order_status = 'Ñ§Ï°ï¿½ï¿½ï¿½Û¿ï¿½';
 				$amount = -$value['Amount'];
 			}
 			
-			// ²åÈë¶©µ¥±í
+			// ï¿½ï¿½ï¿½ë¶©ï¿½ï¿½ï¿½ï¿½
 			$sql = "insert into crm_order(create_time, update_time, create_man_text, update_man_text, deleted, order_name, order_status, order_amount, order_kind, order_sign_date, account_id, account_id_text, order_facilitate_man_text, opportunity_id, opportunity_id_text, order_code) values";
 			$sql .= "(";
 			$sql .= $recordTime . ", ";
@@ -99,20 +99,20 @@ if ($_REQUEST["action"] == "websiteSync") {
 			$sql .= $value['MemberID'] . ", ";
 			$sql .= "'" . $value['CompanyName'] . "', ";
 			$sql .= "'" . $value['CreateBy'] . "', ";
-			//$sql .= "'Ñ§Ï°¿¨ºÅ" . $value['CardNo'] . "£¬\n" . $value['Remark'] . "' ";
-			$sql .= "10, 'Ñ§Ï°¿¨', 'StudyCard'";
+			//$sql .= "'Ñ§Ï°ï¿½ï¿½ï¿½ï¿½" . $value['CardNo'] . "ï¿½ï¿½\n" . $value['Remark'] . "' ";
+			$sql .= "10, 'Ñ§Ï°ï¿½ï¿½', 'StudyCard'";
 			$sql .= ")";
 			mysql_query($sql);
 			//echo $sql . '<br/>';
 			
-			// »ñµÃ×ÔÔöID
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
 			//$sql = "select max(id) from crm_order";
 			//$resultQuery = mysql_query($sql);
 			//while ($row = mysql_fetch_row($resultQuery)) {
 			//	$id = $row[0];
 			//}
 			
-			// ²åÈë¶©µ¥ÏêÇé±í
+			// ï¿½ï¿½ï¿½ë¶©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			//$sql = "insert into crm_order_products_list(main_id, deleted, product_id, qty, number, price, total, create_time, update_time, create_man_text, update_man_text) values(";
 			//$sql .= $id . ", ";
 			//$sql .= '0, 10, 1, 1, ';
@@ -128,7 +128,7 @@ if ($_REQUEST["action"] == "websiteSync") {
 			*/
 		}
 	}
-	echo "³É¹¦µ¼Èë";
+	echo "ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½";
 } else {
 ?>
 	<!DOCTYPE html>
@@ -137,10 +137,10 @@ if ($_REQUEST["action"] == "websiteSync") {
 	<body>
 	<form method="post" action="?action=websiteSync">
 	<table cellspacing="0" border="0" width="100%">
-		<tr><td colspan="2" align="center"><h1>µ¼ÈëÑ§Ï°¿¨Êý¾Ý</h2></td></tr>
-		<tr><td align="right" width="50%">ÇëÊäÈëÍøÕ¾ºóÌ¨ÓÃ»§Ãû£º</td><td><input type="input" name="username" size="15" /></td></tr>
-		<tr><td align="right">ÇëÊäÈëÍøÕ¾ºóÌ¨ÃÜÂë£º</td><td><input type="password" name="password" size="15" /></td></tr>
-		<tr><td colspan="2" align="center"><input type="submit" name="btnSubmit" value="µ¼   Èë" size="15" style="margin:3px; width:150px; height:40px; font-size:25px; border:solid 1px #888;" /></td></tr>
+		<tr><td colspan="2" align="center"><h1>ï¿½ï¿½ï¿½ï¿½Ñ§Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</h2></td></tr>
+		<tr><td align="right" width="50%">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½Ì¨ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½</td><td><input type="input" name="username" size="15" /></td></tr>
+		<tr><td align="right">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ë£º</td><td><input type="password" name="password" size="15" /></td></tr>
+		<tr><td colspan="2" align="center"><input type="submit" name="btnSubmit" value="ï¿½ï¿½   ï¿½ï¿½" size="15" style="margin:3px; width:150px; height:40px; font-size:25px; border:solid 1px #888;" /></td></tr>
 	</table>
 	</body>
 	</html>
